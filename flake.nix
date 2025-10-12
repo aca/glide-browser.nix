@@ -62,9 +62,7 @@
               in
               sources.${system};
 
-            nativeBuildInputs = pkgs.lib.optionals pkgs.stdenv.isLinux [
-              pkgs.makeWrapper
-            ];
+            nativeBuildInputs = [ ];
 
             sourceRoot = ".";
 
@@ -75,13 +73,19 @@
                   cp -r glide/* $out/lib/glide/
                   chmod +x $out/lib/glide/glide
 
-                  makeWrapper ${pkgs.steam-run}/bin/steam-run $out/bin/glide \
-                    --add-flags "$out/lib/glide/glide" \
-                    --chdir $out/lib/glide
+                  cat > $out/bin/glide <<EOF
+                  #!/bin/sh
+                  cd $out/lib/glide
+                  exec ${pkgs.steam-run}/bin/steam-run ${pkgs.bash}/bin/bash -c "GTK_IM_MODULE=\$GTK_IM_MODULE $out/lib/glide/glide"
+                  EOF
+                  chmod +x $out/bin/glide
 
-                  makeWrapper ${pkgs.steam-run}/bin/steam-run $out/bin/glide-browser \
-                    --add-flags "$out/lib/glide/glide" \
-                    --chdir $out/lib/glide
+                  cat > $out/bin/glide-browser <<EOF
+                  #!/bin/sh
+                  cd $out/lib/glide
+                  exec ${pkgs.steam-run}/bin/steam-run ${pkgs.bash}/bin/bash -c "GTK_IM_MODULE=\$GTK_IM_MODULE $out/lib/glide/glide"
+                  EOF
+                  chmod +x $out/bin/glide-browser
                 ''
               else
                 ''
