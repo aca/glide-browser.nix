@@ -62,7 +62,7 @@
               in
               sources.${system};
 
-            nativeBuildInputs = [ ];
+            nativeBuildInputs = pkgs.lib.optionals pkgs.stdenv.isDarwin [ pkgs.undmg ];
 
             sourceRoot = ".";
 
