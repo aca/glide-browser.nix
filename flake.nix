@@ -136,7 +136,7 @@
             '';
 
             meta = {
-              description = "Glide Browser";
+              description = "Extensible and keyboard-focused web browser built on Firefox";
               homepage = "https://github.com/glide-browser/glide";
               platforms = [
                 "x86_64-linux"
