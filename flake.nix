@@ -35,28 +35,37 @@
           ...
         }:
         let
+          desktopItem = pkgs.makeDesktopItem {
+            name = "glide-browser";
+            desktopName = "Glide Browser";
+            comment = "Extensible and keyboard-focused web browser built on Firefox";
+            exec = "glide";
+            icon = "glide-browser";
+            categories = [ "Network" "WebBrowser" ];
+          };
+
           glide-browser = pkgs.stdenv.mkDerivation rec {
             pname = "glide-browser";
-            version = "0.1.54a";
+            version = "0.1.57a";
 
             src =
               let
                 sources = {
                   "x86_64-linux" = pkgs.fetchurl {
                     url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-x86_64.tar.xz";
-                    sha256 = "0scl2v2p6zsgnyq275m9ndiqjnpchnc63a9mncyj6sjyxxpkj3s7";
+                    sha256 = "1bdmrpbbq1zxpgd06sc8xvph29q3ivlc3k6fbv9xs33sq03jzb84";
                   };
                   "aarch64-linux" = pkgs.fetchurl {
                     url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.linux-aarch64.tar.xz";
-                    sha256 = "0qrwdkga6ykxfrkhhzc600j878dy2hd1jyxjyy0wj0w24cs9x1qa";
+                    sha256 = "1qyki7cfmkhi2p1wfgy1ymr6m52b8vn5a34gn7gfybk616vlvj23";
                   };
                   "x86_64-darwin" = pkgs.fetchurl {
                     url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.macos-x86_64.dmg";
-                    sha256 = "1ivli27cg6sn7qri2yxw7pmqdm63n8mdnsgs1vdw62dy1f0xijfs";
+                    sha256 = "0zz7jd77jqd6frfg1mq19bafdmy4zidl30xhcymqcbgqpv98fflf";
                   };
                   "aarch64-darwin" = pkgs.fetchurl {
                     url = "https://github.com/glide-browser/glide/releases/download/${version}/glide.macos-aarch64.dmg";
-                    sha256 = "1x01hh21zd26fg3hfa0wq8c4avl198jdmwjy0axwpvaj81njrdwq";
+                    sha256 = "078gx609mfbg486nmlxs7pqjc4n81hxxwf9sqdmqvyafzdyc9lh5";
                   };
                 };
               in
@@ -105,6 +114,14 @@
                   cp -r glide/* $out/lib/glide/
                   chmod +x $out/lib/glide/glide
 
+                  for size in 16 32 48 64 128; do
+                    dir=$out/share/icons/hicolor/''${size}x''${size}/apps
+                    mkdir -p $dir
+                    cp glide/browser/chrome/icons/default/default$size.png $dir/glide-browser.png
+                  done
+
+                  ln -s ${desktopItem}/share/applications $out/share/
+
                   runHook postInstall
                 ''
               else
@@ -119,7 +136,7 @@
             '';
 
             meta = {
-              description = "Glide Browser";
+              description = "Extensible and keyboard-focused web browser built on Firefox";
               homepage = "https://github.com/glide-browser/glide";
               platforms = [
                 "x86_64-linux"
